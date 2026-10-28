@@ -1,0 +1,43 @@
+# SPDX-License-Identifier: Apache-2.0
+# Quan Pham <quanpham071204@gmail.com> October 2026
+# CI configuration for CVA6 (cv64a6_imafdc_sv39, Verilator testharness)
+
+ci_enabled: true
+
+# Each test group below fails on openhwfoundation/cva6@ddb26b316. RTL paths are relative to
+# https://github.com/openhwfoundation/cva6/blob/ddb26b316/
+exclude_extensions:
+  # FCVT F->int updates fflags but does not set mstatus.FS to Dirty.
+  # CVA6 #3173, fix in PR #3678. RTL: core/csr_regfile.sv
+  - S_F
+  - Sm_F
+  - U_F
+  # LR takes store/AMO causes (6, 7, 15) instead of load causes (4, 5, 13), also in PMP checks.
+  # CVA6 #2455, #3394, #3606. RTL: core/load_store_unit.sv, core/cva6_mmu/cva6_mmu.sv
+  - Exceptions_Zalrsc
+  - PMP_Zalrsc_cfg_wr
+  - Sv_ExceptionsZalrsc_sv39_exceptions_Zalrsc
+  - Sv_ExceptionsZalrscSm_sv39_exceptions_Zalrsc_mprv_S_Mmode
+  - Sv_ExceptionsZalrscSm_sv39_medeleg_Zalrsc
+  # cbo.clean/flush raises a store page fault on a page with R=1, W=0.
+  # CVA6 #3431 (PR #3592).
+  - Sv_Zicbo_sv39_zicbom_exceptions
+  # Writes to mie/mip/mideleg do not flush the pipeline, so a newly enabled interrupt
+  # is taken a few instructions late. CVA6 #3175, #3651.
+  - InterruptsSm_priority_mideleg
+  # pmpaddr bit 0 reads as 1 in NAPOT mode (core/csr_regfile.sv#L1054-L1056), so the
+  # smallest NAPOT region is 16 bytes while TOR uses 8-byte granularity. CVA6 #697.
+  - PMP_Sm_grain-
+  - PMP_S_napot_legal_lxwr-01
+  - PMP_Sm_napot_legal_lxwr-01
+  - PMP_U_napot_legal_lxwr-01
+  - PMP_Sm_priority-
+  - PMP_Zca_misaligned_napot
+  # Loads from address 0 succeed on the testharness (debug module region), but Sail has no
+  # memory there and raises an access fault.
+  - PMP_Sm_cfg_A_tor_zero
+
+apt_packages: "autoconf flex bison help2man libfl-dev ccache device-tree-compiler libboost-dev"
+install_script: ".github/scripts/install-cva6.sh"
+setup_script: ".github/scripts/setup-cva6.sh"
+shards: 1

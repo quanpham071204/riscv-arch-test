@@ -1,4 +1,4 @@
-## DUT Configuration for the CV32A65X
+## DUT Configurations for CVA6
 
 The following configuration is provided for the CVA6 core in its 32-bit application-class setup:
 
@@ -6,11 +6,11 @@ The following configuration is provided for the CVA6 core in its 32-bit applicat
 | ---------- | --------------------------------- | ---------------------------------------------- |
 | `cv32a65x` | RV32IMC_Zicsr_Zcb_Zba_Zbb_Zbc_Zbs | Formal release version of the CVA6 32-bit core |
 
+| `cv64a6_imafdc_sv39` | RV64IMAFDC_Zicsr_Zifencei_Zicntr_Zihpm_Zicbom_Zba_Zbb_Zbc_Zbs_Zbkb_Zbkc, S/U, Sv39 | Stand-alone CVA6 `cv64a6_imafdc_sv39_hpdcache_pmp_mmu_axi` on the Verilator testharness |
 This configuration implements a 6-stage in-order, single-issue pipeline compliant with the RISC-V Privileged Architecture v1.13 (Machine-mode only). The specific architectural features, supported exceptions, and parameters for this core version are detailed in the [CV32A65X Design Document](https://docs.openhwfoundation.org/projects/cva6-user-manual/04_cv32a65x/design/design.html). This configuration is intended for high-confidence validation using the ACT 4.0 framework.
-
 To build the UDB configuration, coverage files and ELFs run the following
 command from the top of your working copy of this repo:
 
 ```
-$ make CONFIG_FILES=config/cores/cva6/cv32a65x/test_config.yaml
+make CONFIG_FILES=config/cores/cva6/cv64a6_imafdc_sv39/test_config.yaml
 ```
