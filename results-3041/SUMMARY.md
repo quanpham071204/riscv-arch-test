@@ -91,3 +91,12 @@ File:
 ## Đề xuất
 
 - Exclusion hiện tại khớp hoàn toàn với cv64a6_imafdc_sv39 sau rebase. Không cần đổi gì cho cv64.
+
+## Lần chạy 3 (tùy chọn): cv32a6_imac_sv32 có exclusion
+
+- Đã verilate thêm `cv32a6_imac_sv32` bằng đúng lệnh `make -C cva6 verilate ...` trong `install-cva6.sh`: thành công, 97 s.
+- Lần chạy đầu bị dừng giữa chừng vì container khởi động lại. Chưa có kết quả; đang chạy lại:
+
+```bash
+make cv32a6_imac_sv32 WORKDIR=work-excl EXCLUDE_EXTENSIONS="$EXCL"
+```
