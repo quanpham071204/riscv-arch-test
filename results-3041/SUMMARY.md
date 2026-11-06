@@ -2,7 +2,15 @@
 
 # Kết quả ACT cho cv64a6_imafdc_sv39 (riscv-arch-test#3041, sau rebase)
 
-Trạng thái: **đang chạy**. File này được cập nhật dần.
+Trạng thái: **xong**.
+
+| Lần chạy | Lệnh | Tổng | Pass | Fail | Thời gian mô phỏng |
+| --- | --- | ---: | ---: | ---: | ---: |
+| cv64a6_imafdc_sv39, có exclusion | `make cv64a6_imafdc_sv39 EXCLUDE_EXTENSIONS="$EXCL"` | 658 | 658 | 0 | 3144 s |
+| cv64a6_imafdc_sv39, không loại trừ | `make cv64a6_imafdc_sv39` | 676 | 658 | 18 | 3152 s |
+| cv32a6_imac_sv32, có exclusion | `make cv32a6_imac_sv32 EXCLUDE_EXTENSIONS="$EXCL"` | 350 | 350 | 0 | 1669 s |
+
+18 test fail khi không loại trừ trùng chính xác với 18 test bị exclusion loại.
 
 - Commit test: `75687708d15d273a852dc503b1752190b048ff58` (nhánh `rebase/3041-act4`)
 - Máy: 4 CPU (Intel(R) Xeon(R) Processor @ 2.10GHz), 15 GB RAM, không swap, Ubuntu 24.04.5 LTS, container cloud tạm.
@@ -95,8 +103,19 @@ File:
 ## Lần chạy 3 (tùy chọn): cv32a6_imac_sv32 có exclusion
 
 - Đã verilate thêm `cv32a6_imac_sv32` bằng đúng lệnh `make -C cva6 verilate ...` trong `install-cva6.sh`: thành công, 97 s.
-- Lần chạy đầu bị dừng giữa chừng vì container khởi động lại. Chưa có kết quả; đang chạy lại:
+- Lần chạy đầu bị dừng giữa chừng vì container khởi động lại. Kết quả bên dưới là của lần chạy lại hoàn chỉnh.
 
 ```bash
 make cv32a6_imac_sv32 WORKDIR=work-excl EXCLUDE_EXTENSIONS="$EXCL"
 ```
+
+- Kết quả: **350/350 pass, 0 fail** (`RESULT: All 350 tests passed.`, `make` rc=0), 1669 s, 4 job.
+- Exclusion mới không làm hỏng config này. Không chạy cv32a6_imac_sv32 không loại trừ, nên không kiểm tra được các mục exclusion chỉ dành cho sv32 còn fail hay không.
+- Log: `summary_cv32a6_imac_sv32_excl.log`.
+
+## Ghi chú
+
+- Mọi lệnh `make` chạy với `PATH=/home/user/cva6-builds/bin:/opt/rbenv/versions/3.3.6/bin:/opt/act4-tools/sail/bin:/opt/act4-tools/gcc/bin:$PATH` và `CVA6_SNAPSHOT=/home/user/cva6-builds`.
+- Các lần chạy có exclusion dùng `WORKDIR=work-excl`, lần không loại trừ dùng `work/` mặc định.
+- Không chạy `cv32a65x` và `cv32a60x`.
+- Theo yêu cầu của người dùng, không mở PR cho nhánh `results/3041-act4`, kể cả PR nháp.
