@@ -33,3 +33,14 @@ PMP_Sm_cfg_A_tor_zero,Exceptions_Zalrsc,PMP_Zalrsc_cfg_wr,Sv_ExceptionsZalrsc_sv
 
 - `TARGETS="cv64a6_imafdc_sv39_hpdcache" install-cva6.sh /home/user/cva6-builds`: thành công, 1915 s (gồm clone CVA6 `81245a4`, build Verilator, Spike và verilate testharness). Thư mục cài đặt 4,5 GB.
 - `PATH=/home/user/cva6-builds/bin:$PATH`, `CVA6_SNAPSHOT=/home/user/cva6-builds`.
+
+## Lần chạy 1: cv64a6_imafdc_sv39 có exclusion
+
+```bash
+EXCL="$(.github/scripts/ci_config.py --exclusions config/cores/cva6/ci.yaml)"
+make cv64a6_imafdc_sv39 WORKDIR=work-excl EXCLUDE_EXTENSIONS="$EXCL"
+```
+
+- Kết quả: **658/658 pass, 0 fail** (`RESULT: All 658 tests passed.`, `make` rc=0).
+- Thời gian chạy mô phỏng: 3144 s, 4 job song song (mặc định `nproc` của `run_tests.py`).
+- Log: `summary_cv64_excl.log`, gồm các dòng `RVCP-SUMMARY` đã sắp xếp.
