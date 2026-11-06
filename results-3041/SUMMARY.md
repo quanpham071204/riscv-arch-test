@@ -44,3 +44,50 @@ make cv64a6_imafdc_sv39 WORKDIR=work-excl EXCLUDE_EXTENSIONS="$EXCL"
 - Kết quả: **658/658 pass, 0 fail** (`RESULT: All 658 tests passed.`, `make` rc=0).
 - Thời gian chạy mô phỏng: 3144 s, 4 job song song (mặc định `nproc` của `run_tests.py`).
 - Log: `summary_cv64_excl.log`, gồm các dòng `RVCP-SUMMARY` đã sắp xếp.
+
+## Lần chạy 2: cv64a6_imafdc_sv39 không loại trừ
+
+```bash
+make cv64a6_imafdc_sv39
+```
+
+- Kết quả: **658/676 pass, 18 fail** (`RESULT: 18 failed, 658 passed out of 676 tests.`). `make` rc=2 là do có test fail.
+- Thời gian chạy mô phỏng: 3152 s, 4 job.
+- Trước rebase là 659/676 với 17 fail. Sau rebase có thêm 1 fail, là `InterruptsSm_priority_mip_M-00`.
+- **Tập 18 test fail trùng chính xác với 18 test cv64 bị exclusion loại** (`diff` rỗng giữa `failed_cv64_full.txt` và `excluded_cv64.txt`).
+  - Không có fail nào nằm ngoài exclusion.
+  - Mọi exclusion áp dụng cho cv64 vẫn còn fail, nên không có exclusion nào thừa với cv64.
+  - `InterruptsSm_priority_mip_M-00` (mới từ `act4`) fail đúng như exclusion dự đoán. Trap signature word 0 kỳ vọng `0x0000000003101e63` nhưng nhận `0x0000000003100e63`, `mcause=0x8000000000000009` (SEI).
+- Các mục exclusion chỉ khớp test sv32 nên không có test nào trên cv64: `Sv_ExceptionsZalrsc_sv32`, `Sv_ExceptionsZalrscSm_sv32`, `PMP_Sv_sv32_pmp_on_pte`, `Sv_sv32_spage_Smode`, `Sv_sv32_spage_mstatus_sum_set_Smode`, `Sv_sv32_upage_Umode`. Lần chạy này không kiểm tra được chúng.
+
+Danh sách test fail:
+
+```
+Exceptions_Zalrsc-00
+InterruptsSm_priority_mideleg_M-00
+InterruptsSm_priority_mideleg_S-00
+InterruptsSm_priority_mideleg_U-00
+InterruptsSm_priority_mip_M-00
+PMP_Sm_cfg_A_tor_zero-00
+PMP_Sm_grain-00
+PMP_Zalrsc_cfg_wr-00
+S_F-00
+Sm_F-00
+Sv_ExceptionsZalrscSm_sv39_exceptions_Zalrsc_mprv_S_Mmode-00
+Sv_ExceptionsZalrscSm_sv39_medeleg_Zalrsc_Smode-00
+Sv_ExceptionsZalrscSm_sv39_medeleg_Zalrsc_Umode-00
+Sv_ExceptionsZalrsc_sv39_exceptions_Zalrsc_Smode-00
+Sv_ExceptionsZalrsc_sv39_exceptions_Zalrsc_Umode-00
+Sv_Zicbo_sv39_zicbom_exceptions_Smode-00
+Sv_Zicbo_sv39_zicbom_exceptions_Umode-00
+U_F-00
+```
+
+File:
+
+- `summary_cv64_full.log`: 676 dòng `RVCP-SUMMARY`.
+- `failures_cv64_full.log`: phần chẩn đoán `RVCP:` của từng test fail.
+
+## Đề xuất
+
+- Exclusion hiện tại khớp hoàn toàn với cv64a6_imafdc_sv39 sau rebase. Không cần đổi gì cho cv64.
