@@ -13,7 +13,7 @@ Trạng thái: **đang chạy**. File này được cập nhật dần.
 - apt: `autoconf flex bison help2man libfl-dev ccache zlib1g-dev device-tree-compiler libboost-regex-dev libboost-system-dev` (từ `ci.yaml`).
 - Sail 0.16 và riscv64-elf GCC 2026.08.27 tải từ release giống `.github/actions/setup-tools`, giải nén vào `/opt/act4-tools/{sail,gcc}`.
 - uv 0.11.32 và Ruby 3.3.6 có sẵn trong container.
-- **Sửa môi trường:** container có hai bản Ruby 3.3.6 (\`/opt/ruby-3.3.6\` trên PATH qua \`/usr/local/bin\`, và rbenv \`/opt/rbenv/versions/3.3.6\`). Gem \`udb\` được cài vào rbenv, nhưng \`bundle exec udb\` báo \`bundler: command not found: udb\`. Đã sửa bằng cách đặt \`/opt/rbenv/versions/3.3.6/bin\` lên đầu \`PATH\`. Đây là lỗi của container, không phải của repo.
+- **Sửa môi trường:** container có hai bản Ruby 3.3.6 (`/opt/ruby-3.3.6` trên PATH qua `/usr/local/bin`, và rbenv `/opt/rbenv/versions/3.3.6`). Gem `udb` được cài vào rbenv, nhưng `bundle exec udb` báo `bundler: command not found: udb`. Đã sửa bằng cách đặt `/opt/rbenv/versions/3.3.6/bin` lên đầu `PATH`. Đây là lỗi của container, không phải của repo.
 - `install-cva6.sh` chạy từ bản sao ngoài repo, chỉ đổi `TARGETS` thành biến môi trường để chỉ verilate `cv64a6_imafdc_sv39_hpdcache`. Không commit thay đổi này.
 
 ## Exclusion (`ci_config.py --exclusions`, 21 mục)
@@ -24,7 +24,7 @@ PMP_Sm_cfg_A_tor_zero,Exceptions_Zalrsc,PMP_Zalrsc_cfg_wr,Sv_ExceptionsZalrsc_sv
 
 ## Số test (đã build ELF, chưa chạy DUT)
 
-- Không loại trừ: 676 ELF (\`test_list_cv64_full.md\`), build 181 s.
-- Có exclusion: 658 ELF. 18 test cv64 bị loại, liệt kê trong \`excluded_cv64.txt\`.
-  So với trước rebase (17), mục mới là \`InterruptsSm_priority_mip_M-00\`.
-- ELF có exclusion được build trong \`WORKDIR=work-excl\`, vì thư mục \`work/<config>/elfs\` giữ lại ELF cũ của các test bị loại.
+- Không loại trừ: 676 ELF (`test_list_cv64_full.md`), build 181 s.
+- Có exclusion: 658 ELF. 18 test cv64 bị loại, liệt kê trong `excluded_cv64.txt`.
+  So với trước rebase (17), mục mới là `InterruptsSm_priority_mip_M-00`.
+- ELF có exclusion được build trong `WORKDIR=work-excl`, vì thư mục `work/<config>/elfs` giữ lại ELF cũ của các test bị loại.
