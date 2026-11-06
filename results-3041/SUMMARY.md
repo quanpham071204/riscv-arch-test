@@ -28,3 +28,8 @@ PMP_Sm_cfg_A_tor_zero,Exceptions_Zalrsc,PMP_Zalrsc_cfg_wr,Sv_ExceptionsZalrsc_sv
 - Có exclusion: 658 ELF. 18 test cv64 bị loại, liệt kê trong `excluded_cv64.txt`.
   So với trước rebase (17), mục mới là `InterruptsSm_priority_mip_M-00`.
 - ELF có exclusion được build trong `WORKDIR=work-excl`, vì thư mục `work/<config>/elfs` giữ lại ELF cũ của các test bị loại.
+
+## Build CVA6
+
+- `TARGETS="cv64a6_imafdc_sv39_hpdcache" install-cva6.sh /home/user/cva6-builds`: thành công, 1915 s (gồm clone CVA6 `81245a4`, build Verilator, Spike và verilate testharness). Thư mục cài đặt 4,5 GB.
+- `PATH=/home/user/cva6-builds/bin:$PATH`, `CVA6_SNAPSHOT=/home/user/cva6-builds`.
